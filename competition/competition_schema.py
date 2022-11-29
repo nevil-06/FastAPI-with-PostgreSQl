@@ -1,24 +1,7 @@
-
-from pydantic import BaseModel
-from database import Base
+from database_files.database import Base
 from sqlalchemy import String,Boolean,Integer,Column,DateTime,ForeignKey
-from userModel import UserDetails
-#from datetime import datetime
-
-
-
-class CompTable(BaseModel):
-    comp_id : int
-    name :str
-    status : str
-    url : str
-    is_deleted : bool
-    created_at : str
-    updated_at : str
-    user_id : int
-    class  Config:
-        orm_mode= True
-
+from user.user_schema import UserDetails
+import datetime
 
 
 class CompDetails(Base):
@@ -28,7 +11,11 @@ class CompDetails(Base):
     status = Column(String(255),nullable=False)
     url = Column(String(255),nullable=False)
     is_deleted = Column(Boolean)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     user_id = Column(Integer,ForeignKey(UserDetails.User_Id))
 
+    def update(self, update:dict):
+        for key, value in update.items():
+            if value:
+                setattr(self, key, value)
