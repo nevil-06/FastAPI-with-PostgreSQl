@@ -1,22 +1,32 @@
-from database_files.database import Base
-from sqlalchemy import String,Boolean,Integer,Column,DateTime,ForeignKey
-from competition.competition_schema import CompDetails
-import datetime
+from pydantic import BaseModel
+from entry.entry_schema import EntryDetails
+from typing import Optional
 
 
-class EntryDetails(Base):
-    __tablename__ = "Entry"
-    entry_id = Column(Integer,primary_key = True)
-    name = Column(String(50),nullable=False)
-    status = Column(String(50),nullable=False)
-    country = Column(String(50),nullable=False)
-    state = Column(String(50),nullable=False)
-    is_deleted = Column(Boolean)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
-    comp_id = Column(Integer,ForeignKey(CompDetails.comp_id))
+class EntryTable(BaseModel):
+    entry_id : Optional[str]
+    name :Optional[str]
+    status : Optional[str]
+    country : Optional[str]
+    state :  Optional[str]
+    is_deleted : Optional[bool]
+    created_at : Optional[str]
+    updated_at : Optional[str]
+    comp_id : Optional[str]
+    
+    class  Config:
+        orm_mode= True
 
-    def update(self, update:dict):
-        for key, value in update.items():
-            if value:
-                setattr(self, key, value)
+class EntryTableUpdateRequest(BaseModel):
+    name: Optional[str]
+    status: Optional[str]
+    country: Optional[str]
+    state:  Optional[str]
+
+class EntryTableCreateRequest(EntryTableUpdateRequest):
+    name: str
+    status: str
+
+class EntryResponse(EntryTableCreateRequest):
+    pass
+    

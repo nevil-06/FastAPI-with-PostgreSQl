@@ -5,11 +5,14 @@
         "deletecomp",
         "deleteentry",
         "fastapi",
+        "jsonable",
+        "onupdate",
         "pydantic",
         "sqlalchemy",
         "updatecomp",
         "updateentry",
         "updateuser",
+        "updateusername",
         "uvicorn"
     ]
 }

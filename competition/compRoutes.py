@@ -1,36 +1,54 @@
-from fastapi import APIRouter, HTTPException 
+from fastapi import APIRouter, HTTPException, Depends
 from competition.competition_schema import CompDetails
 from competition.competition_model import CompTable
 from database_files.database import SessionLocal
-#from datetime import datetime
-
-
-db=SessionLocal()
+from user.user_schema import UserDetails
+from sqlalchemy.orm import Session
 
 
 compRouter = APIRouter()
 
 
-#comp routes
-@compRouter.get('/comps', status_code=200)
-def get_all_comp():
-    comps = db.query(CompDetails).all()
+
+def get_db():
+    try:
+        db = SessionLocal()
+        return db
+    except:
+        print("Can not get the DB.")
+
+
+
+#comp routes that are not deleted
+@compRouter.get('/comps/all', status_code=200)
+def get_all_comp(db: Session = Depends(get_db)):
+    comps = db.query(CompDetails).filter(CompDetails.is_deleted!=True).all()
 
     return comps
 
 
-#get 1 comp
+
+
+
+#get 1 comp that is not deleted
 @compRouter.get('/comp/{comp_id}', status_code=200)
-def get_user(comp_id:int):
-    comp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id).first()
+def get_user(comp_id:str,db:Session=Depends(get_db)):
+    comp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id and CompDetails.is_deleted!=True).first()
     
     return comp
 
+#comp routes that are deleted
+@compRouter.get('/comps/del', status_code=200)
+def get_all_deleted_comp(db:Session=Depends(get_db)):
+    comps = db.query(CompDetails).filter(CompDetails.is_deleted==True).all()
 
-#create                   
+    return comps
+
+
+#create new competition details                
 @compRouter.post('/comps', status_code=201)
-def create_comp(comp:CompTable):
-    db_comp = db.query(CompDetails).filter(CompDetails.name==comp.name).first()
+def create_comp(comp:CompTable,db:Session=Depends(get_db)):
+    db_comp = db.query(CompDetails).filter(CompDetails.name==comp.name and UserDetails.is_Deleted!=True).first()
     
     if db_comp is not None:
         raise HTTPException(status_code=400,detail="Comp already exists")
@@ -56,12 +74,12 @@ def create_comp(comp:CompTable):
 
 #update
 @compRouter.put('/comp/{comp_id}', status_code=200)
-def update_user(comp_id:int,comp:CompTable):
-    updatecomp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id).first()
+def update_user(comp_id:str,comp:CompTable,db:Session=Depends(get_db)):
+    updatecomp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id, CompDetails.is_deleted!=True).first()
     
     if updatecomp:
         updatecomp.update(comp.dict())
-        updatecomp.updated_at = comp.updated_at
+        #updatecomp.updated_at = comp.updated_at
 
         db.add(updatecomp)
         db.commit()
@@ -73,7 +91,7 @@ def update_user(comp_id:int,comp:CompTable):
 
 #delete
 @compRouter.delete('/comp/{comp_id}')
-def delete_comp(comp_id:int):
+def delete_comp(comp_id:str,db:Session=Depends(get_db)):
     deletecomp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id).first()
 
     if deletecomp is None:
@@ -81,7 +99,6 @@ def delete_comp(comp_id:int):
     else:
         deletecomp.is_deleted=True
     
-    db.delete(deletecomp)
     db.commit()
     return {"message": "Competition details with id: {comp_id} is deleted"}
 

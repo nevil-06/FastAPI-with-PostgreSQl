@@ -3,7 +3,7 @@ from user.user_schema import UserDetails
 from typing import Optional
 
 class UserTable(BaseModel):
-    User_Id:Optional[int]
+    User_Id:Optional[str]
     Name: Optional[str]
     Password : Optional[str]
     Email : Optional[str]
