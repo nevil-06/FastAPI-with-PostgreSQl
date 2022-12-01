@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 
 
 engine = create_engine("postgresql://postgres:admin@localhost/user_table",
-                        echo=True)
+                        echo=True
+                      )
 
 
 Base = declarative_base()                      

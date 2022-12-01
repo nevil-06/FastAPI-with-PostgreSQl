@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from entry.entry_schema import EntryDetails
+from entry.entry_model import EntryDetails
 from typing import Optional
 
 
@@ -17,6 +17,8 @@ class EntryTable(BaseModel):
     class  Config:
         orm_mode= True
 
+
+'''
 class EntryTableUpdateRequest(BaseModel):
     name: Optional[str]
     status: Optional[str]
@@ -29,4 +31,4 @@ class EntryTableCreateRequest(EntryTableUpdateRequest):
 
 class EntryResponse(EntryTableCreateRequest):
     pass
-    
+'''

@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Depends
-from competition.competition_schema import CompDetails
-from competition.competition_model import CompTable
+from fastapi import APIRouter, Depends
+from competition.competition_schema import CompTable
+from competition.competition_model import CompDetails
 from database_files.database import SessionLocal
 from user.user_schema import UserDetails
 from sqlalchemy.orm import Session
-
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
 compRouter = APIRouter()
 
@@ -32,10 +33,12 @@ def get_all_comp(db: Session = Depends(get_db)):
 
 #get 1 comp that is not deleted
 @compRouter.get('/comp/{comp_id}', status_code=200)
-def get_user(comp_id:str,db:Session=Depends(get_db)):
-    comp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id and CompDetails.is_deleted!=True).first()
+def get_user(comp_id:str, db:Session=Depends(get_db)):
+    comp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id, CompDetails.is_deleted!=True).first()
     
     return comp
+
+
 
 #comp routes that are deleted
 @compRouter.get('/comps/del', status_code=200)
@@ -45,62 +48,62 @@ def get_all_deleted_comp(db:Session=Depends(get_db)):
     return comps
 
 
+
+
 #create new competition details                
 @compRouter.post('/comps', status_code=201)
-def create_comp(comp:CompTable,db:Session=Depends(get_db)):
-    db_comp = db.query(CompDetails).filter(CompDetails.name==comp.name and UserDetails.is_Deleted!=True).first()
+def create_comp(comp:CompTable, db:Session=Depends(get_db)):
+    db_comp = db.query(CompDetails).filter(CompDetails.name==comp.name, UserDetails.is_Deleted!=True).first()
     
-    if db_comp is not None:
-        raise HTTPException(status_code=400,detail="Comp already exists")
+    if db_comp:
+        return {"message": "Competiton details already exists"}
 
 
-    new_comp = CompDetails(
-        comp_id = comp.comp_id,
-        name = comp.name,
-        status =comp.status,
-        url = comp.url,        
-        user_id = comp.user_id
+    new_comp= CompDetails(
+        comp_id= comp.comp_id,
+        name= comp.name,
+        status= comp.status,
+        url= comp.url,        
+        user_id= comp.user_id
     )
-
-
     db.add(new_comp)
     db.commit()
 
-
-    return {"message":"comp added successfully"}
+    return {"message":"New Competiton details added successfully"}
 
 
 
 
 #update
 @compRouter.put('/comp/{comp_id}', status_code=200)
-def update_user(comp_id:str,comp:CompTable,db:Session=Depends(get_db)):
+def update_user(comp_id:str, comp:CompTable, db:Session=Depends(get_db)):
     updatecomp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id, CompDetails.is_deleted!=True).first()
     
     if updatecomp:
         updatecomp.update(comp.dict())
-        #updatecomp.updated_at = comp.updated_at
-
+        # json_compatible_item_data = jsonable_encoder(updatecomp)
         db.add(updatecomp)
         db.commit()
-        return {f"message":"competiton with id: {comp_id} is updated"}
-    else:
-        return {f"message":"competiton with id: {comp_id} is deleted so cannot update"}
+        return {"message": f"competiton with id: {comp_id} is updated"}
+        # comp.dict() this only returns the field with updated value and other fields as null
+        # JSONResponse(content=json_compatible_item_data)
+        # {"message": f"competiton with id: {comp_id} is updated"}
+    
+    return {"message": f"competiton with id: {comp_id} is deleted so cannot update"}
 
 
 
 #delete
 @compRouter.delete('/comp/{comp_id}')
-def delete_comp(comp_id:str,db:Session=Depends(get_db)):
-    deletecomp = db.query(CompDetails).filter(CompDetails.comp_id==comp_id).first()
+def delete_comp(comp_id:str, db:Session=Depends(get_db)):
+    deletecomp= db.query(CompDetails).filter(CompDetails.comp_id==comp_id).first()
 
-    if deletecomp is None:
-        raise HTTPException(status_code=404, detail="comp not found to delete")
-    else:
-        deletecomp.is_deleted=True
+    if deletecomp:
+        return {"message": "Competition details not found to delete"}
     
+    deletecomp.is_deleted= True
     db.commit()
-    return {"message": "Competition details with id: {comp_id} is deleted"}
+    return {"message": f"Competition details with id: {comp_id} is deleted"}
 
 
 # end of comp routes

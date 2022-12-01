@@ -1,5 +1,5 @@
 from database_files.database import Base
-from sqlalchemy import String,Boolean,Integer,Column,DateTime,ForeignKey
+from sqlalchemy import String, Boolean, Column, DateTime, ForeignKey
 from competition.competition_schema import CompDetails
 import datetime
 import uuid
