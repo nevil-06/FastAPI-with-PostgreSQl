@@ -1,6 +1,6 @@
 from database_files.database import Base
 from sqlalchemy import String, Boolean, Column, DateTime, ForeignKey
-from competition.competition_schema import CompDetails
+from competition.schema import CompDetails
 import datetime
 import uuid
 from sqlalchemy.dialects.postgresql import UUID

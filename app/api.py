@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from user.userRoutes import userRouter
-from competition.compRoutes import compRouter
+from user.routes import userRouter
+from competition.routes import compRouter
 from entry.entryRoutes import entryRouter
 
 

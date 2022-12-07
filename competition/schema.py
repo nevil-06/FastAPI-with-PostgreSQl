@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from competition.competition_model import CompDetails
+from competition.model import CompDetails
 from typing import Optional
 
 

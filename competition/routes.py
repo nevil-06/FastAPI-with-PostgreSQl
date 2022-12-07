@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
-from competition.competition_schema import CompTable
-from competition.competition_model import CompDetails
+from competition.schema import CompTable
+from competition.model import CompDetails
 from database_files.database import SessionLocal
-from user.user_schema import UserDetails
+from user.schema import UserDetails
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -15,7 +15,7 @@ def get_db():
     try:
         db = SessionLocal()
         return db
-    except:
+    except AttributeError:
         print("Can not get the DB.")
 
 
@@ -81,13 +81,10 @@ def update_user(comp_id:str, comp:CompTable, db:Session=Depends(get_db)):
     
     if updatecomp:
         updatecomp.update(comp.dict())
-        # json_compatible_item_data = jsonable_encoder(updatecomp)
+        
         db.add(updatecomp)
         db.commit()
         return {"message": f"competiton with id: {comp_id} is updated"}
-        # comp.dict() this only returns the field with updated value and other fields as null
-        # JSONResponse(content=json_compatible_item_data)
-        # {"message": f"competiton with id: {comp_id} is updated"}
     
     return {"message": f"competiton with id: {comp_id} is deleted so cannot update"}
 
@@ -123,6 +120,13 @@ def delete_comp(comp_id:str, db:Session=Depends(get_db)):
         #updated_at = comp.updated_at,
 
     # db.commit()
+
+        # json_compatible_item_data = jsonable_encoder(updatecomp)
+        # comp.dict() this only returns the field with updated value and other fields as null
+        # JSONResponse(content=json_compatible_item_data)
+        # {"message": f"competiton with id: {comp_id} is updated"}
+
+
 
     # return {"message":"competition details updated successfully"}
 '''updatecomp.name = comp.name

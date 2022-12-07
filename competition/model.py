@@ -1,6 +1,6 @@
 from database_files.database import Base
 from sqlalchemy import String, Boolean, Column, DateTime, ForeignKey
-from user.user_schema import UserDetails
+from user.schema import UserDetails
 import datetime
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
@@ -14,7 +14,7 @@ class CompDetails(Base):
     is_deleted = Column(Boolean,default=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
-    user_id = Column(ForeignKey(UserDetails.User_Id))
+    user_id = Column(ForeignKey(UserDetails.user_id))
 
     def update(self, update:dict):
         for key, value in update.items():
