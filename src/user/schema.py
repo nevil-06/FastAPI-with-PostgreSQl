@@ -1,7 +1,7 @@
-from pydantic import BaseModel
-from app.user.model import UserDetails
-from typing import Optional
 from uuid import UUID
+from typing import Optional
+from pydantic import BaseModel
+from src.user.model import UserDetails
 
 
 class UserResponse(BaseModel):
@@ -22,9 +22,16 @@ class UserCreate(BaseModel):
         orm_mode = True
 
 
+class UserLogin(UserCreate):
+    email: Optional[str]
+    password : Optional[str]
+
+    class Config:
+        orm_mode = True
+
 
 class UserTable(UserResponse):
-    user_id : Optional[UUID]
+    id : Optional[UUID]
     password: Optional[str]
     is_deleted: Optional[bool]
     created_at: Optional[str]

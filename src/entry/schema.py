@@ -1,7 +1,7 @@
-from pydantic import BaseModel
-from app.entry.model import EntryDetails
-from typing import Optional
 from uuid import UUID
+from typing import Optional
+from pydantic import BaseModel
+from src.entry.model import EntryDetails
 
 
 class EntryResponse(BaseModel):
@@ -14,7 +14,7 @@ class EntryResponse(BaseModel):
         orm_mode= True
 
 class EntryTable(EntryResponse):
-    entry_id : Optional[UUID]
+    id : Optional[UUID]
     is_deleted : Optional[bool]
     created_at : Optional[str]
     updated_at : Optional[str]

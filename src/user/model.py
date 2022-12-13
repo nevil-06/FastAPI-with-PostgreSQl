@@ -1,12 +1,14 @@
-from app.database_files.database import Base
-from sqlalchemy import String, Boolean, Column, DateTime
-import datetime
 import uuid
+import datetime
+from src.database_files.database import Base
+from sqlalchemy import String, Boolean, Column, DateTime
 
+def get_id():
+    return str(uuid.uuid4())
 
 class UserDetails(Base):
     __tablename__ = "user"
-    user_id = Column(String, primary_key = True, default = uuid.uuid4())
+    id = Column(String, primary_key = True, default = get_id)
     name = Column(String(255))
     password = Column(String(255))
     email = Column(String(255), unique = True)
