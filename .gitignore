@@ -1,6 +1,6 @@
 .vscode
 **/__pycache__/
-**/nenv/
+nenv
 test.ipynb
 .pre-commit-config.yaml
 create_db
