@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import Optional
 from pydantic import BaseModel
-from src.user.model import UserDetails
+from src.user.model import User
 
 
 class UserResponse(BaseModel):

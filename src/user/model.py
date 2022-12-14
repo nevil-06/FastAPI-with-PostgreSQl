@@ -6,7 +6,7 @@ from sqlalchemy import String, Boolean, Column, DateTime
 def get_id():
     return str(uuid.uuid4())
 
-class UserDetails(Base):
+class User(Base):
     __tablename__ = "user"
     id = Column(String, primary_key = True, default = get_id)
     name = Column(String(255))

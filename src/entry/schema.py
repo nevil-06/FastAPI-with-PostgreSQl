@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import Optional
 from pydantic import BaseModel
-from src.entry.model import EntryDetails
+from src.entry.model import Entry
 
 
 class EntryResponse(BaseModel):
@@ -22,3 +22,6 @@ class EntryTable(EntryResponse):
     
     class  Config:
         orm_mode= True
+
+class EntryReq(EntryResponse):
+    pass

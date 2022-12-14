@@ -1,7 +1,7 @@
 from uuid import UUID
 from typing import Optional
 from pydantic import BaseModel
-from src.competition.model import CompetitionDetails
+from src.competition.model import Competition
 
 
 class CompetitionResponse(BaseModel):

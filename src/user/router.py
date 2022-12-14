@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-from src.user.model import UserDetails
+from src.user.model import User
 from passlib.context import CryptContext
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -35,15 +35,15 @@ def get_users(token : str= Depends(outh2_scheme)):
 # get all users that are not deleted 
 @user_router.get('/users/all', status_code = status.HTTP_200_OK, response_model= List[UserResponse])
 def get_all_users(db: Session = Depends(get_db)):
-    users = db.query(UserDetails).filter(UserDetails.is_deleted != True).all()
+    users = db.query(User).filter(User.is_deleted != True).all()
     return users
 
 
 # get 1 user that is not not deleted 
 @user_router.get('/get/user/{id}', status_code = status.HTTP_200_OK)
 def get_user(id: str, db: Session = Depends(get_db)):
-    one_user = db.query(UserDetails).filter(
-        UserDetails.id == id, UserDetails.is_deleted != True).first()
+    one_user = db.query(User).filter(
+        User.id == id, User.is_deleted != True).first()
     if one_user:
         return one_user
     else: 
@@ -54,7 +54,7 @@ def get_user(id: str, db: Session = Depends(get_db)):
 # get only users that are deleted 
 @user_router.get('/users/del', status_code=200, response_model= List[UserResponse])
 def get_all_deleted_users(db: Session = Depends(get_db)):
-    users = db.query(UserDetails).filter(UserDetails.is_deleted == True).all()
+    users = db.query(User).filter(User.is_deleted == True).all()
     if users:
         return users
     else:
@@ -64,20 +64,20 @@ def get_all_deleted_users(db: Session = Depends(get_db)):
 #admin function to see full data 
 @user_router.get('/admin/users/all')
 def admin_get_all(db: Session = Depends(get_db)):
-        users = db.query(UserDetails).filter(UserDetails.is_deleted != True).all()
+        users = db.query(User).filter(User.is_deleted != True).all()
         return users
 
 
 # create new user and provide their details
 @user_router.post('/users', status_code= status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(UserDetails).filter(
-        UserDetails.email == user.email).first()
+    db_user = db.query(User).filter(
+        User.email == user.email).first()
     try:    
         if db_user:
             return {"message": "user already exists with this email id"}
         else:
-            new_user = UserDetails(
+            new_user = User(
                 name = user.name,
                 password = user.password,
                 email = user.email)
@@ -94,8 +94,8 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 # update user and their desired values
 @user_router.put('/user/{id}', status_code= status.HTTP_202_ACCEPTED)
 def update_user(id: str, user: UserTable, db: Session = Depends(get_db)):
-    updateuser = db.query(UserDetails).filter(
-        UserDetails.id == id, UserDetails.is_deleted == False).first()
+    updateuser = db.query(User).filter(
+        User.id == id, User.is_deleted == False).first()
 
     if updateuser:
         updateuser.update(user.dict())
@@ -111,8 +111,8 @@ def update_user(id: str, user: UserTable, db: Session = Depends(get_db)):
 # delete user that you want to
 @user_router.delete('/user/del/{id}')
 def delete_user(id: str, db: Session = Depends(get_db)):
-    deleteuser = db.query(UserDetails).filter(
-        UserDetails.id == id).first()
+    deleteuser = db.query(User).filter(
+        User.id == id).first()
 
     if deleteuser.is_deleted != True:
         deleteuser.is_deleted = True
@@ -126,8 +126,8 @@ def delete_user(id: str, db: Session = Depends(get_db)):
 # user login api
 @user_router.post('/user/login', status_code= status.HTTP_201_CREATED)
 def login_user(user: UserLogin, db: Session = Depends(get_db)):
-    db_user = db.query(UserDetails).filter(
-        UserDetails.email == user.email).first()
+    db_user = db.query(User).filter(
+        User.email == user.email).first()
     
     if db_user and db_user.password == user.password: 
         return {"success" : "user login successful"}
