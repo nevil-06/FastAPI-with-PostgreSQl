@@ -1,8 +1,8 @@
-"""v0.1 database create fix
+"""0.1 update func add
 
-Revision ID: 96c40ba7525f
-Revises: 23b7fef05968
-Create Date: 2022-12-13 10:21:09.080599
+Revision ID: 082722d8bf1f
+Revises: bf61145bb31e
+Create Date: 2022-12-17 11:02:15.847987
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '96c40ba7525f'
-down_revision = '23b7fef05968'
+revision = '082722d8bf1f'
+down_revision = 'bf61145bb31e'
 branch_labels = None
 depends_on = None
 

@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base, as_declarative
 
 
 engine = create_engine("postgresql://postgres:admin@localhost/user_table",
-                        echo=True
+                        echo= True
                       )
 
 

@@ -1,24 +1,18 @@
-import uuid
 import datetime
+# from src.utils.update import update_fields
+from src.utils.defaultcol import DefaultColumns
 from src.database_files.database import Base
-from sqlalchemy import String, Boolean, Column, DateTime
+from sqlalchemy import String, Boolean, Column
 
-def get_id():
-    return str(uuid.uuid4())
 
-class User(Base):
+
+class User(DefaultColumns, Base):
     __tablename__ = "user"
-    id = Column(String, primary_key = True, default = get_id)
     name = Column(String(255))
     password = Column(String(255))
     email = Column(String(255), unique = True)
-    is_deleted = Column(Boolean, default = False)
-    created_at = Column(DateTime, default = datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default = datetime.datetime.utcnow,
-                        onupdate = datetime.datetime.utcnow)
 
-    def update(self, update: dict):
-        for key, value in update.items():
-            if value:
-                setattr(self, key, value)
-
+    def update_fields(self, update: dict):
+            for key, value in update.items():
+                if value:
+                    setattr(self, key, value)

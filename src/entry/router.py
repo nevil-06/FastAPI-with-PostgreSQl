@@ -75,7 +75,7 @@ def update_entry(id: str, entry: EntryTable, db: Session = Depends(get_db)):
     
 
 
-#delete
+#delete entry using entry_id
 @entry_router.delete('/entry/{id}')
 def delete_entry(id: str, db: Session = Depends(get_db)):
     deleteentry = db.query(Entry).filter(Entry.id == id).first()
@@ -86,4 +86,5 @@ def delete_entry(id: str, db: Session = Depends(get_db)):
         return {"message": "entry is deleted successfully"}
     elif deleteentry.is_deleted == True:
         return {"message": "entry is already deleted"}
+
 # end of entry routes

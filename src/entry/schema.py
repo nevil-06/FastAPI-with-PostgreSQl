@@ -20,8 +20,6 @@ class EntryTable(EntryResponse):
     updated_at : Optional[str]
     comp_id : Optional[str]
     
-    class  Config:
-        orm_mode= True
 
 class EntryReq(EntryResponse):
     pass

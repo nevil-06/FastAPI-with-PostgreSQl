@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-from src.user.schema import UserDetails
+from src.user.schema import User
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Depends, status
@@ -44,13 +44,12 @@ def admin_get_all(db: Session = Depends(get_db)):
 #create new competition details                
 @competiton_router.post('/competitons', status_code = status.HTTP_201_CREATED)
 def create_competition(competiton: CompetitionTable, db: Session = Depends(get_db)):
-    create_comptetition= db.query(Competition).filter(Competition.name == competiton.name, UserDetails.is_deleted != True).first()
+    create_comptetition= db.query(Competition).filter(Competition.name == competiton.name, User.is_deleted != True).first()
     
     if create_comptetition:
         return {"message": "Competiton details already exists"}
     else:
         new_competition = Competition(
-            id = competiton.id,
             name = competiton.name,
             status = competiton.status,
             url = competiton.url,        

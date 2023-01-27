@@ -39,4 +39,21 @@ class UserTable(UserResponse):
 
     class Config:
         orm_mode = True
-    
+
+
+class TokenPayload(BaseModel):
+    sub: str = None
+    exp: int = None
+
+
+class SystemUser(UserLogin):
+    password: str
+
+
+class HTTPError(BaseModel):
+    detail: str
+
+
+class LoggedInUser(BaseModel):
+    id : Optional[UUID]
+    email : Optional[UUID]
