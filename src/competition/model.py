@@ -1,10 +1,8 @@
-import uuid
-import datetime
-from src.user.schema import User
-from src.utils.defaultcol import DefaultColumns
-from src.database_files.database import Base
-from sqlalchemy import String, Boolean, Column, ForeignKey
+from sqlalchemy import Column, ForeignKey, String
 
+from src.database_files.database import Base
+from src.user.model import User
+from src.utils.defaultcol import DefaultColumns
 
 
 class Competition(DefaultColumns, Base):

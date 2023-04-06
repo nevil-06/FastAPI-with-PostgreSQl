@@ -1,9 +1,8 @@
-import uuid
-import datetime
+from sqlalchemy import Column, ForeignKey, String
+
+from src.competition.model import Competition
 from src.database_files.database import Base
 from src.utils.defaultcol import DefaultColumns
-from src.competition.schema import Competition
-from sqlalchemy import String, Boolean, Column, DateTime, ForeignKey
 
 
 class Entry(DefaultColumns, Base):
@@ -14,7 +13,7 @@ class Entry(DefaultColumns, Base):
     state = Column(String(255))
     comp_id = Column(ForeignKey(Competition.id))
 
-    def update(self, update:dict):
+    def update(self, update: dict):
         for key, value in update.items():
             if value:
                 setattr(self, key, value)

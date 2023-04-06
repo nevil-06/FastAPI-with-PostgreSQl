@@ -1,7 +1,7 @@
-from uuid import UUID
 from typing import Optional
+from uuid import UUID
+
 from pydantic import BaseModel
-from src.competition.model import Competition
 
 
 class CompetitionResponse(BaseModel):
@@ -9,7 +9,7 @@ class CompetitionResponse(BaseModel):
     status: Optional[str]
     url: Optional[str]
 
-    class  Config:
+    class Config:
         orm_mode = True
 
 
@@ -19,6 +19,6 @@ class CompetitionTable(CompetitionResponse):
     created_at: Optional[str]
     updated_at: Optional[str]
     user_id: Optional[str]
-    
-    class  Config:
+
+    class Config:
         orm_mode = True
